@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Xml;
@@ -70,6 +71,7 @@ public class ModConfig
         return 0;
     }
 
+
     public Dictionary<string, string> ParseProperties(XmlDocument document)
     {
         var properties = new Dictionary<string, string>();
@@ -88,6 +90,7 @@ public class ModConfig
         return properties;
     }
 
+
     public string GetString(string name)
     {
         if (properties.TryGetValue(name, out var value))
@@ -100,7 +103,7 @@ public class ModConfig
 
     public float GetFloat(string name)
     {
-        return float.Parse(GetString(name));
+        return float.Parse(GetString(name), CultureInfo.InvariantCulture);
     }
 
     public int GetInt(string name)
@@ -118,8 +121,8 @@ public class ModConfig
         string[] values = GetString(name).Split(',');
 
         return new Vector2(
-            float.Parse(values[0].Trim()),
-            float.Parse(values[1].Trim())
+            float.Parse(values[0].Trim(), CultureInfo.InvariantCulture),
+            float.Parse(values[1].Trim(), CultureInfo.InvariantCulture)
         );
     }
 
@@ -128,9 +131,9 @@ public class ModConfig
         string[] values = GetString(name).Split(',');
 
         return new Vector3(
-            float.Parse(values[0].Trim()),
-            float.Parse(values[1].Trim()),
-            float.Parse(values[2].Trim())
+            float.Parse(values[0].Trim(), CultureInfo.InvariantCulture),
+            float.Parse(values[1].Trim(), CultureInfo.InvariantCulture),
+            float.Parse(values[2].Trim(), CultureInfo.InvariantCulture)
         );
     }
 
