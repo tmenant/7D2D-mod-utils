@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Xml;
@@ -28,10 +27,11 @@ public class ModConfig
 
     public ModConfig(int version = 0, bool save = false)
     {
-        var callingAssembly = Assembly.GetCallingAssembly();
+        var assembly = Assembly.GetCallingAssembly();
+        var mod = ModManager.GetModForAssembly(assembly);
 
-        this.modPath = Path.GetDirectoryName(callingAssembly.Location);
-        this.modName = callingAssembly.GetName().Name;
+        this.modPath = Path.GetFullPath(mod.Path);
+        this.modName = mod.Name;
         this.version = version;
 
         this.userDataConfigPath = $"{GameIO.GetUserGameDataDir()}/{modName}.ModConfig.xml";
@@ -71,7 +71,6 @@ public class ModConfig
         return 0;
     }
 
-
     public Dictionary<string, string> ParseProperties(XmlDocument document)
     {
         var properties = new Dictionary<string, string>();
@@ -90,7 +89,6 @@ public class ModConfig
         return properties;
     }
 
-
     public string GetString(string name)
     {
         if (properties.TryGetValue(name, out var value))
@@ -103,7 +101,7 @@ public class ModConfig
 
     public float GetFloat(string name)
     {
-        return float.Parse(GetString(name), CultureInfo.InvariantCulture);
+        return float.Parse(GetString(name));
     }
 
     public int GetInt(string name)
@@ -121,8 +119,8 @@ public class ModConfig
         string[] values = GetString(name).Split(',');
 
         return new Vector2(
-            float.Parse(values[0].Trim(), CultureInfo.InvariantCulture),
-            float.Parse(values[1].Trim(), CultureInfo.InvariantCulture)
+            float.Parse(values[0].Trim()),
+            float.Parse(values[1].Trim())
         );
     }
 
@@ -131,9 +129,9 @@ public class ModConfig
         string[] values = GetString(name).Split(',');
 
         return new Vector3(
-            float.Parse(values[0].Trim(), CultureInfo.InvariantCulture),
-            float.Parse(values[1].Trim(), CultureInfo.InvariantCulture),
-            float.Parse(values[2].Trim(), CultureInfo.InvariantCulture)
+            float.Parse(values[0].Trim()),
+            float.Parse(values[1].Trim()),
+            float.Parse(values[2].Trim())
         );
     }
 
